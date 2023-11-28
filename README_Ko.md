@@ -7,19 +7,19 @@ Created by Yoshifumi Kawai(neuecc)
 
 What is UniRx?
 ---
-UniRx (Reactive Extensions for Unity) is a reimplementation of the .NET Reactive Extensions. The Official Rx implementation is great but doesn't work on Unity and has issues with iOS IL2CPP compatibility. This library fixes those issues and adds some specific utilities for Unity. Supported platforms are PC/Mac/Android/iOS/WebGL/WindowsStore/etc and the library.
+UniRx(Unity용 리액티브 익스텐션)는 .NET 리액티브 익스텐션을 재구현한 것입니다. 공식 Rx 구현은 훌륭하지만 Unity에서 작동하지 않으며 iOS IL2CPP 호환성 문제가 있습니다. 이 라이브러리는 이러한 문제를 해결하고 Unity를 위한 몇 가지 특정 유틸리티를 추가합니다. 지원되는 플랫폼은 PC/Mac/Android/iOS/WebGL/WindowsStore/기타 라이브러리입니다.
 
-UniRx is available on the Unity Asset Store (FREE) - http://u3d.as/content/neuecc/uni-rx-reactive-extensions-for-unity/7tT
+UniRx는 Unity 에셋 스토어에서 무료로 다운로드할 수 있습니다. - http://u3d.as/content/neuecc/uni-rx-reactive-extensions-for-unity/7tT
 
-Blog for update info - https://medium.com/@neuecc
+업데이트 정보 블로그 - https://medium.com/@neuecc
 
-Support thread on the Unity Forums: Ask me any question - http://forum.unity3d.com/threads/248535-UniRx-Reactive-Extensions-for-Unity
+Unity 포럼의 지원 스레드: 질문하기 - http://forum.unity3d.com/threads/248535-UniRx-Reactive-Extensions-for-Unity
 
-Release Notes, see [UniRx/releases](https://github.com/neuecc/UniRx/releases)
+릴리스 노트, [UniRx/releases](https://github.com/neuecc/UniRx/releases) 참조
 
-UniRx is Core Library (Port of Rx) + Platform Adaptor (MainThreadScheduler/FromCoroutine/etc) + Framework (ObservableTriggers/ReactiveProeperty/etc).
+UniRx는 코어 라이브러리(Port of Rx) + 플랫폼 어댑터(MainThreadScheduler/FromCoroutine/etc) + 프레임워크(ObservableTriggers/ReactiveProeperty/etc)로 구성됩니다.
 
-> Note: async/await integration(UniRx.Async) is separated to [Cysharp/UniTask](https://github.com/Cysharp/UniTask) after ver. 7.0.
+> 참고: 비동기/대기 통합(UniRx.Async)은 버전 7.0 이후 [Cysharp/UniTask](https://github.com/Cysharp/UniTask)로 분리되어 있습니다.
 
 Why Rx?
 ---

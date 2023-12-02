@@ -23,28 +23,27 @@ UniRx는 코어 라이브러리(Port of Rx) + 플랫폼 어댑터(MainThreadSche
 
 Why Rx?
 ---
-Ordinarily, Network operations in Unity require the use of `WWW` and `Coroutine`. That said, using `Coroutine` is not good practice for asynchronous operations for the following (and other) reasons:
+일반적으로 Unity에서 네트워크 작업을 하려면 `WWW`와 `Coroutine`을 사용해야 합니다. 하지만 다음과 같은 이유로 비동기 연산에는 `Coroutine`을 사용하지 않는 것이 좋습니다:
 
-1. Coroutines can't return any values, since its return type must be IEnumerator.
-2. Coroutines can't handle exceptions, because yield return statements cannot be surrounded with a try-catch construction.
+1. Coroutine은 반환 유형이 IEnumerator여야 하므로 어떤 값도 반환할 수 없습니다.
+2. 반환 문을 try-catch 구조로 둘러쌀 수 없기 때문에 Coroutine은 예외를 처리할 수 없습니다.
 
-This kind of lack of composability causes operations to be close-coupled, which often results in huge monolithic IEnumerators.
+이러한 종류의 컴포저빌리티 부족으로 인해 연산이 밀접하게 결합되어 거대한 모놀리식 IEnumerator가 생성되는 경우가 많습니다.
 
-Rx cures that kind of "asynchronous blues". Rx is a library for composing asynchronous and event-based programs using observable collections and LINQ-style query operators. 
+Rx는 이러한 "비동기 블루스"를 해결합니다. Rx는 관찰 가능한 컬렉션과 LINQ 스타일의 쿼리 연산자를 사용하여 비동기 및 이벤트 기반 프로그램을 작성하기 위한 라이브러리입니다. 
   
-The game loop (every Update, OnCollisionEnter, etc), sensor data (Kinect, Leap Motion, VR Input, etc.) are all types of events. Rx represents events as reactive sequences which are both easily composable and support time-based operations by using LINQ query operators.
+게임 루프(모든 업데이트, OnCollisionEnter 등), 센서 데이터(키넥트, 도약 모션, VR 입력 등)는 모두 이벤트 유형에 속합니다. Rx는 이벤트를 반응형 시퀀스로 표현하며, 이는 쉽게 구성할 수 있고 LINQ 쿼리 연산자를 사용하여 시간 기반 연산을 지원합니다.
 
-Unity is generally single threaded but UniRx facilitates multithreading for joins, cancels, accessing GameObjects, etc.
+Unity는 일반적으로 싱글 스레드이지만 UniRx는 조인, 취소, 게임 오브젝트 액세스 등을 위한 멀티스레딩을 지원합니다.
 
-UniRx helps UI programming with uGUI. All UI events (clicked, valuechanged, etc) can be converted to UniRx event streams. 
+UniRx는 uGUI로 UI 프로그래밍을 지원합니다. 모든 UI 이벤트(클릭, 값 변경 등)를 UniRx 이벤트 스트림으로 변환할 수 있습니다. 
 
-Unity supports async/await from 2017 with C# upgrades, UniRx family prjects provides more lightweight, more powerful async/await integration with Unity. Please see  [Cysharp/UniTask](https://github.com/Cysharp/UniTask).
+유니티는 C# 업그레이드를 통해 2017년부터 비동기/대기 기능을 지원하며, UniRx 제품군 프로젝트는 더욱 가볍고 강력한 비동기/대기 기능을 유니티와 통합합니다. Cysharp/UniTask](https://github.com/Cysharp/UniTask)를 참조하세요.
 
 Introduction
 ---
-Great introduction to Rx article: [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754).
-
-The following code implements the double click detection example from the article in UniRx:
+Rx에 대한 훌륭한 소개 글입니다:
+[당신이 놓치고 있던 반응형 프로그래밍 입문](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754).다음 코드는 이 글의 더블 클릭 감지 예제를 UniRx로 구현한 것입니다:
 
 ```csharp
 var clickStream = Observable.EveryUpdate()
@@ -55,16 +54,15 @@ clickStream.Buffer(clickStream.Throttle(TimeSpan.FromMilliseconds(250)))
     .Subscribe(xs => Debug.Log("DoubleClick Detected! Count:" + xs.Count));
 ```
 
-This example demonstrates the following features (in only five lines!):
+이 예시에서는 다음 기능을 5줄로 설명합니다:
 
-* The game loop (Update) as an event stream
-* Composable event streams
-* Merging self stream
-* Easy handling of time based operations   
+* 이벤트 스트림으로서의 게임 루프(업데이트)
+* 컴포저블 이벤트 스트림* 자체 스트림 병합
+* 시간 기반 작업의 손쉬운 처리   
 
-Network operations
+네트워크 작업
 ---
-Use ObservableWWW for asynchronous network operations. Its Get/Post functions return subscribable IObservables:
+비동기 네트워크 작업에는 ObservableWWW를 사용하세요. 이 함수의 Get/Post 함수는 구독 가능한 IObservables를 반환합니다:
 
 ```csharp
 ObservableWWW.Get("http://google.co.jp/")
@@ -73,7 +71,7 @@ ObservableWWW.Get("http://google.co.jp/")
         ex => Debug.LogException(ex)); // onError
 ```
 
-Rx is composable and cancelable. You can also query with LINQ expressions:
+Rx는 구성 및 취소가 가능합니다. LINQ 표현식으로 쿼리할 수도 있습니다:
 
 ```csharp
 // composing asynchronous sequence with LINQ query expressions
@@ -88,7 +86,7 @@ var cancel = query.Subscribe(x => Debug.Log(x));
 cancel.Dispose();
 ```
 
-Use Observable.WhenAll for parallel requests:
+병렬 요청에는 Observable.WhenAll을 사용합니다:
 
 ```csharp
 // Observable.WhenAll is for parallel asynchronous operation
@@ -106,7 +104,7 @@ parallel.Subscribe(xs =>
 });
 ```
 
-Progress information is available:
+진행률 정보를 확인할 수 있습니다:
 
 ```csharp
 // notifier for progress use ScheduledNotifier or new Progress<float>(/* action */)
@@ -117,7 +115,7 @@ progressNotifier.Subscribe(x => Debug.Log(x)); // write www.progress
 ObservableWWW.Get("http://google.com/", progress: progressNotifier).Subscribe();
 ```
 
-Error handling:
+오류 처리:
 
 ```csharp
 // If WWW has .error, ObservableWWW throws WWWErrorException to onError pipeline.
@@ -138,9 +136,9 @@ ObservableWWW.Get("http://www.google.com/404")
     .Subscribe();
 ```
 
-Using with IEnumerators (Coroutines)
+IEnumerator(Coroutines)와 함께 사용
 ---
-IEnumerator (Coroutine) is Unity's primitive asynchronous tool. UniRx integrates coroutines and IObservables. You can write asynchronious code in coroutines, and orchestrate them using UniRx. This is best way to control asynchronous flow.
+IEnumerator(Coroutine)는 유니티의 기본 비동기 툴입니다. UniRx는 Coroutine과 IObservables를 통합합니다. Coroutine으로 비동기 코드를 작성하고 UniRx를 사용하여 오케스트레이션할 수 있습니다. 이는 비동기 흐름을 제어하는 가장 좋은 방법입니다.
 
 ```csharp
 // two coroutines
@@ -173,7 +171,7 @@ var cancel = Observable.FromCoroutine(AsyncA)
 cancel.Dispose();
 ```
 
-If in Unity 5.3, you can use ToYieldInstruction for Observable to Coroutine.
+Unity 5.3에서는 Coroutine에 옵저버블에 ToYieldInstruction을 사용할 수 있습니다.
 
 ```csharp
 IEnumerator TestNewCustomYieldInstruction()

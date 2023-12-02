@@ -193,7 +193,7 @@ IEnumerator TestNewCustomYieldInstruction()
     yield return this.transform.ObserveEveryValueChanged(x => x.position).FirstOrDefault(p => p.y >= 100).ToYieldInstruction();
 }
 ```
-Normally, we have to use callbacks when we require a coroutine to return a value. Observable.FromCoroutine can convert coroutines to cancellable IObservable[T] instead.
+일반적으로 값을 반환하기 위해 Coroutine이 필요할 때는 콜백을 사용해야 합니다. Observable.FromCoroutine은 대신 Coroutine을 취소 가능한 IObservable[T]로 변환할 수 있습니다.
 
 ```csharp
 // public method
@@ -227,7 +227,7 @@ static IEnumerator GetWWWCore(string url, IObserver<string> observer, Cancellati
 }
 ```
 
-Here are some more examples. Next is a multiple OnNext pattern.
+다음은 몇 가지 예시입니다. 다음은 다중 OnNext 패턴입니다.
 
 ```csharp
 public static IObservable<float> ToObservable(this UnityEngine.AsyncOperation asyncOperation)
@@ -259,7 +259,7 @@ Application.LoadLevelAsync("testscene")
     .Subscribe();
 ```
 
-Using for MultiThreading
+멀티스레딩에 사용
 ---
 
 ```csharp
@@ -292,13 +292,13 @@ Observable.WhenAll(heavyMethod, heavyMethod2)
 
 DefaultScheduler
 ---
-UniRx's default time based operations (Interval, Timer, Buffer(timeSpan), etc) use `Scheduler.MainThread` as their scheduler. That means most operators (except for `Observable.Start`) work on a single thread, so ObserverOn isn't needed and thread safety measures can be ignored. This is differet from the standard RxNet implementation but better suited to the Unity environment.  
+UniRx의 기본 시간 기반 연산(Interval, Timer, Buffer(timeSpan) 등)은 스케줄러로 `Scheduler.MainThread`를 사용합니다. 즉, 대부분의 연산자(`Observable.Start` 제외)는 단일 스레드에서 작동하므로 ObserverOn이 필요하지 않고 스레드 안전 조치를 무시할 수 있습니다. 이는 표준 RxNet 구현과는 다르지만 Unity 환경에 더 적합합니다.  
 
-`Scheduler.MainThread` runs under Time.timeScale's influence. If you want to ignore the time scale, use ` Scheduler.MainThreadIgnoreTimeScale` instead.
+스케줄러.메인 스레드`는 시간 척도의 영향을 받아 실행됩니다. 시간 척도를 무시하려면 대신 `Scheduler.MainThreadIgnoreTimeScale`을 사용합니다.
 
 MonoBehaviour triggers
 ---
-UniRx can handle MonoBehaviour events with `UniRx.Triggers`:
+UniRx는 `UniRx.Triggers`로 모노비헤이비어 이벤트를 처리할 수 있습니다:
 
 ```csharp
 using UniRx;

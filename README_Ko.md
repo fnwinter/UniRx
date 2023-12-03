@@ -1099,7 +1099,7 @@ AsyncMessageBroker.Default.PublishAsync(new TestArgs { Value = 3000 })
 
 UniRx.Toolkit
 ---
-`UniRx.Toolkit`에는 서버용 Rx 도구가 포함되어 있습니다. 현재 `ObjectPool`과 `AsyncObjectPool`이 포함되어 있습니다.  `Rent`, `Return`, rent 작업 전 풀을 채우기 위한 `PreloadAsync`가 가능합니다.
+`UniRx.Toolkit`에는 서버용 Rx 도구가 포함되어 있습니다. 현재 `ObjectPool`과 `AsyncObjectPool`이 포함되어 있습니다.  `Rent`, `Return`, Rent 작업 전 풀을 채우기 위한 `PreloadAsync`가 가능합니다.
 
 ```csharp
 // sample class
@@ -1163,7 +1163,7 @@ public class Presenter : MonoBehaviour
 }
 ```
 
-비주얼 스튜디오 분석기
+Visual Studio 분석기
 ---
 Visual Studio 2015 사용자의 경우, 사용자 지정 분석기인 UniRxAnalyzer가 제공됩니다. 예를 들어 스트림이 구독되지 않은 경우를 감지할 수 있습니다.
 
@@ -1171,15 +1171,15 @@ Visual Studio 2015 사용자의 경우, 사용자 지정 분석기인 UniRxAnaly
 
 ![](StoreDocument/VSAnalyzer.jpg)
 
-옵저버블웹`은 구독될 때까지 실행되지 않으므로 분석기는 잘못된 사용에 대해 경고합니다. NuGet에서 다운로드할 수 있습니다.
+`ObservableWWW`은 구독될 때까지 실행되지 않으므로 분석기는 잘못된 사용에 대해 경고합니다. NuGet에서 다운로드할 수 있습니다.
 
-* 설치-패키지 [UniRxAnalyzer](http://www.nuget.org/packages/UniRxAnalyzer)
+* Install-Package [UniRxAnalyzer](http://www.nuget.org/packages/UniRxAnalyzer)
 
 새로운 분석기 아이디어를 깃허브 이슈에 제출해 주세요!
 
 샘플
 ---
-UniRx/예제](https://github.com/neuecc/UniRx/tree/master/Assets/Plugins/UniRx/Examples)를 참조하세요.  
+[UniRx/예제](https://github.com/neuecc/UniRx/tree/master/Assets/Plugins/UniRx/Examples)를 참조하세요. 
 
 샘플에서는 리소스 관리 방법(Sample09_EventHandling), 메인 스레드 디스패처가 무엇인지 등을 설명합니다.
 

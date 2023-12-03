@@ -323,9 +323,9 @@ public class MyComponent : MonoBehaviour
 }
 ```
 
-Supported triggers are listed in [UniRx.wiki#UniRx.Triggers](https://github.com/neuecc/UniRx/wiki#unirxtriggers).
+지원되는 트리거는 [UniRx.위키#UniRx.트리거](https://github.com/neuecc/UniRx/wiki#unirxtriggers)에 나열되어 있습니다.
 
-These can also be handled more easily by directly subscribing to observables returned by extension methods on Component/GameObject. These methods inject ObservableTrigger automaticaly (except for `ObservableEventTrigger` and `ObservableStateMachineTrigger`):
+또한 컴포넌트/게임 오브젝트의 확장 메서드가 반환하는 옵저버블을 직접 구독하면 더 쉽게 처리할 수 있습니다. 이 메서드들은 ObservableTrigger를 자동으로 삽입합니다(`ObservableEventTrigger` 및 `ObservableStateMachineTrigger`는 제외):
 
 ```csharp
 using UniRx;
@@ -345,11 +345,11 @@ public class DragAndDropOnce : MonoBehaviour
 }
 ```
 
-> Previous versions of UniRx provided `ObservableMonoBehaviour`. This is a legacy interface that is no longer supported. Please use UniRx.Triggers instead.
+> 이전 버전의 UniRx는 `ObservableMonoBehaviour`를 제공했습니다. 이 인터페이스는 더 이상 지원되지 않는 레거시 인터페이스입니다. 대신 UniRx.Triggers를 사용하세요.
 
-Creating custom triggers
+사용자 지정 트리거 만들기
 ---
-Converting to Observable is the best way to handle Unity events. If the standard triggers supplied by UniRx are not enough, you can create custom triggers. To demonstrate, here's a LongTap trigger for uGUI:
+관찰 가능으로 변환하는 것이 Unity 이벤트를 처리하는 가장 좋은 방법입니다. UniRx에서 제공하는 표준 트리거가 충분하지 않은 경우 커스텀 트리거를 생성할 수 있습니다. 예를 들어, 다음은 uGUI용 LongTap 트리거입니다:
 
 ```csharp
 public class ObservableLongPointerDownTrigger : ObservableTriggerBase, IPointerDownHandler, IPointerUpHandler
@@ -394,7 +394,7 @@ public class ObservableLongPointerDownTrigger : ObservableTriggerBase, IPointerD
 }
 ```
 
-It can be used as easily as the standard triggers:
+표준 트리거처럼 쉽게 사용할 수 있습니다:
 
 ```csharp
 var trigger = button.AddComponent<ObservableLongPointerDownTrigger>();
@@ -402,11 +402,11 @@ var trigger = button.AddComponent<ObservableLongPointerDownTrigger>();
 trigger.OnLongPointerDownAsObservable().Subscribe();
 ```
 
-Observable Lifecycle Management
+Observable 수명 주기 관리
 ---
-When is OnCompleted called? Subscription lifecycle management is very important to consider when using UniRx. `ObservableTriggers` call OnCompleted when the GameObject they are attached to is destroyed. Other static generator methods (`Observable.Timer`, `Observable.EveryUpdate`, etc...) do not stop automatically, and their subscriptions should be managed manually.
+OnCompleted는 언제 호출되나요? 구독 라이프사이클 관리는 UniRx를 사용할 때 고려해야 할 매우 중요한 사항입니다. ObservableTriggers는 연결된 게임 오브젝트가 소멸될 때 OnCompleted를 호출합니다. 다른 정적 제너레이터 메서드(`Observable.Timer`, `Observable.EveryUpdate` 등)는 자동으로 중지되지 않으므로 해당 구독을 수동으로 관리해야 합니다.
 
-Rx provides some helper methods, such as `IDisposable.AddTo` which allows you to dispose of several subscriptions at once:
+Rx는 여러 구독을 한 번에 폐기할 수 있는 `IDisposable.AddTo`와 같은 몇 가지 도우미 메서드를 제공합니다:
 
 ```csharp
 // CompositeDisposable is similar with List<IDisposable>, manage multiple IDisposable
@@ -425,7 +425,7 @@ void OnTriggerEnter(Collider other)
 }
 ```
 
-If you want to automatically Dispose when a GameObjects is destroyed, use AddTo(GameObject/Component):
+게임 오브젝트가 소멸될 때 자동으로 폐기하려면 AddTo(게임 오브젝트/컴포넌트)를 사용하면 됩니다:
 
 ```csharp
 void Start()
@@ -434,14 +434,14 @@ void Start()
 }
 ```
 
-AddTo calls facilitate automatic Dispose. If you needs special OnCompleted handling in the pipeline, however, use `TakeWhile`, `TakeUntil`, `TakeUntilDestroy` and `TakeUntilDisable` instead:
+AddTo 호출은 자동 처리를 용이하게 합니다. 그러나 파이프라인에서 특별한 OnCompleted 처리가 필요한 경우 `TakeWhile`, `TakeUntil`, `TakeUntilDestroy` 및 `TakeUntilDisable`을 대신 사용하세요:
 
 ```csharp
 Observable.IntervalFrame(30).TakeUntilDisable(this)
     .Subscribe(x => Debug.Log(x), () => Debug.Log("completed!"));
 ```
 
-If you handle events, `Repeat` is an important but dangerous method. It may cause an infinite loop, so handle with care:
+이벤트를 처리할 때 `Repeat`는 중요하지만 위험한 메서드입니다. 무한 루프를 유발할 수 있으므로 주의해서 다뤄야 합니다:
 
 ```csharp
 using UniRx;
@@ -461,7 +461,7 @@ public class DangerousDragAndDrop : MonoBehaviour
 }
 ```
 
-UniRx provides an additional safe Repeat method. `RepeatSafe`: if contiguous "OnComplete" are called repeat stops. `RepeatUntilDestroy(gameObject/component)`, `RepeatUntilDisable(gameObject/component)` allows to stop when a target GameObject has been destroyed:
+UniRx는 안전한 반복 메서드를 추가로 제공합니다. 'RepeatSafe': 연속된 "OnComplete"가 반복 중지를 호출하는 경우. RepeatUntilDestroy(게임 오브젝트/컴포넌트)`, `RepeatUntilDisable(게임 오브젝트/컴포넌트)`는 대상 게임 오브젝트가 파괴되었을 때 중지할 수 있습니다:
 
 ```csharp
 this.gameObject.OnMouseDownAsObservable()
@@ -472,7 +472,7 @@ this.gameObject.OnMouseDownAsObservable()
     .Subscribe(x => Debug.Log(x));            
 ```
 
-UniRx gurantees hot observable(FromEvent/Subject/ReactiveProperty/UnityUI.AsObservable..., there are like event) have unhandled exception durability. What is it? If subscribe in subcribe, does not detach event.
+UniRx는 처리되지 않은 예외 내구성을 가진 핫 옵저버블(FromEvent/Subject/ReactiveProperty/UnityUI.AsObservable..., 같은 이벤트가 있음)의 내구성을 보장합니다. 무슨 문제인가요? 구독에서 구독하면 이벤트가 분리되지 않습니다.
 
 ```csharp
 button.OnClickAsObservable().Subscribe(_ =>
@@ -485,21 +485,21 @@ button.OnClickAsObservable().Subscribe(_ =>
 });
 ```
 
-This behaviour is sometimes useful such as user event handling.
+이 동작은 때때로 사용자 이벤트 처리와 같이 유용합니다.
 
 
-All class instances provide an `ObserveEveryValueChanged` method, which watches for changing values every frame:
+모든 클래스 인스턴스는 매 프레임마다 값의 변화를 감시하는 `ObserveEveryValueChanged` 메서드를 제공합니다:
 
 ```csharp
 // watch position change
 this.transform.ObserveEveryValueChanged(x => x.position).Subscribe(x => Debug.Log(x));
 ```
 
-It's very useful. If the watch target is a GameObject, it will stop observing when the target is destroyed, and call OnCompleted. If the watch target is a plain C# Object, OnCompleted will be called on GC.
+매우 유용합니다. 감시 대상이 게임 오브젝트인 경우, 대상이 파괴되면 관찰을 중지하고 OnCompleted를 호출합니다. 감시 대상이 일반 C# 오브젝트인 경우 GC에서 OnCompleted가 호출됩니다.
 
-Converting Unity callbacks to IObservables
+Unity 콜백을 IObservables로 변환하기
 ---
-Use Subject (or AsyncSubject for asynchronious operations):
+Subject(또는 비동기 작업의 경우 AsyncSubject)를 사용합니다:
 
 ```csharp
 public class LogCallback
@@ -540,7 +540,7 @@ LogHelper.LogCallbackAsObservable()
     .Subscribe();
 ```
 
-In Unity5, `Application.RegisterLogCallback` was removed in favor of `Application.logMessageReceived`, so we can now simply use `Observable.FromEvent`.
+Unity5에서는 `Application.RegisterLogCallback`이 `Application.logMessageReceived` 대신 제거되었으므로 이제 `Observable.FromEvent`를 간단히 사용할 수 있습니다.
 
 ```csharp
 public static IObservable<LogCallback> LogCallbackAsObservable()
@@ -584,9 +584,9 @@ logger.Log("Message");
 logger.Exception(new Exception("test exception"));
 ```
 
-Debugging
+디버깅
 ---
-`Debug` operator in `UniRx.Diagnostics` namespace helps debugging.
+UniRx.Diagnostics` 네임스페이스의 `Debug` 연산자는 디버깅에 도움이 됩니다.
 
 ```csharp
 // needs Diagnostics using
@@ -633,9 +633,9 @@ using UniRx.Diagnostics;
 }
 ```
 
-shows sequence element on `OnNext`, `OnError`, `OnCompleted`, `OnCancel`, `OnSubscribe` timing to Debug.Log. It enables only `#if DEBUG`.
+`OnNext`, `OnError`, `OnCompleted`, `OnCancel`, `OnSubscribe` 타이밍의 시퀀스 요소를 Debug.Log에 표시합니다. 이 옵션은 `#if DEBUG`만 활성화합니다.
 
-Unity-specific Extra Gems
+유니티 전용 추가 보석
 ---
 ```csharp
 // Unity's singleton UiThread Queue Scheduler
@@ -659,7 +659,7 @@ Observable.OnceApplicationQuit();
 
 Framecount-based time operators
 ---
-UniRx provides a few framecount-based time operators:
+UniRx는 몇 가지 프레임 수 기반 시간 연산자를 제공합니다:
 
 Method | 
 -------|
@@ -682,13 +682,13 @@ FrameInterval|
 FrameTimeInterval|
 BatchFrame|
 
-For example, delayed invoke once:
+예를 들어, 한 번 지연 호출합니다:
 
 ```csharp
 Observable.TimerFrame(100).Subscribe(_ => Debug.Log("after 100 frame"));
 ```
 
-Every* Method's execution order is
+모든* 메서드의 실행 순서는 다음과 같습니다.
 
 ```
 EveryGameObjectUpdate(in MainThreadDispatcher's Execution Order) ->
@@ -697,15 +697,15 @@ EveryLateUpdate ->
 EveryEndOfFrame
 ```
 
-EveryGameObjectUpdate invoke from same frame if caller is called before MainThreadDispatcher.Update(I recommend MainThreadDispatcher called first than others(ScriptExecutionOrder makes -32000)      
-EveryLateUpdate, EveryEndOfFrame invoke from same frame.  
-EveryUpdate, invoke from next frame.  
+호출자가 MainThreadDisatcher.Update보다 먼저 호출된 경우 동일한 프레임에서 호출되는 EveryGameObjectUpdate(다른 것보다 먼저 호출된 MainThreadDisatcher를 권장합니다(스크립트 실행 순서가 -32000이 되게 함).      
+EveryLateUpdate, EveryEndOfFrame은 같은 프레임에서 호출합니다.  
+EveryUpdate, 다음 프레임에서 호출합니다.  
 
 MicroCoroutine
 ---
-MicroCoroutine is memory efficient and fast coroutine worker. This implemantation is based on [Unity blog's 10000 UPDATE() CALLS](http://blogs.unity3d.com/2015/12/23/1k-update-calls/), avoid managed-unmanaged overhead so gets 10x faster iteration. MicroCoroutine is automaticaly used on Framecount-based time operators and ObserveEveryValueChanged.
+마이크로코루틴은 메모리 효율적이고 빠른 코루틴 워커입니다. 이 구현은 [Unity blog's 10000 UPDATE() CALLS](http://blogs.unity3d.com/2015/12/23/1k-update-calls/)를 기반으로 하며, 관리-비관리 오버헤드를 피하여 10배 빠른 반복을 구현합니다. 마이크로 코루틴은 프레임 카운트 기반 시간 연산자 및 ObserveEveryValueChanged에 자동으로 사용됩니다.
 
-If you want to use MicroCoroutine instead of standard unity coroutine, use `MainThreadDispatcher.StartUpdateMicroCoroutine` or `Observable.FromMicroCoroutine`.
+표준 유니티 코루틴 대신 MicroCoroutine 을 사용하려면 `MainThreadDispatcher.StartUpdateMicroCoroutine` 또는 `Observable.FromMicroCoroutine`을 사용하세요.
 
 ```csharp
 int counter;
@@ -734,9 +734,9 @@ void Start()
 
 ![image](https://cloud.githubusercontent.com/assets/46207/15267997/86e9ed5c-1a0c-11e6-8371-14b61a09c72c.png)
 
-MicroCoroutine's limitation, only supports `yield return null` and update timing is determined start method(`StartUpdateMicroCoroutine`, `StartFixedUpdateMicroCoroutine`, `StartEndOfFrameMicroCoroutine`). 
+MicroCoroutine의 한계로 인해 `yield return null`만 지원하며 업데이트 타이밍은 시작 메서드(`StartUpdateMicroCoroutine`, `StartFixedUpdateMicroCoroutine`, `StartEndOfFrameMicroCoroutine`)를 통해 결정됩니다. 
 
-If you combine with other IObservable, you can check completed property like isDone.
+다른 IObservable과 결합하면 isDone과 같은 완료된 속성을 확인할 수 있습니다.
 
 ```csharp
 IEnumerator MicroCoroutineWithToYieldInstruction()
@@ -754,9 +754,9 @@ IEnumerator MicroCoroutineWithToYieldInstruction()
 }
 ```
 
-uGUI Integration
+uGUI 통합
 ---
-UniRx can handle `UnityEvent`s easily. Use `UnityEvent.AsObservable` to subscribe to events:
+UniRx는 `UnityEvent`를 쉽게 처리할 수 있습니다. 이벤트를 구독하려면 `UnityEvent.AsObservable`을 사용하세요:
 
 ```csharp
 public Button MyButton;
@@ -764,7 +764,7 @@ public Button MyButton;
 MyButton.onClick.AsObservable().Subscribe(_ => Debug.Log("clicked"));
 ```
 
-Treating Events as Observables enables declarative UI programming. 
+이벤트를 옵저버블로 처리하면 선언적 UI 프로그래밍이 가능합니다. 
 
 ```csharp
 public Toggle MyToggle;
@@ -791,11 +791,11 @@ void Start()
 }
 ```
 
-For more on reactive UI programming please consult Sample12, Sample13 and the ReactiveProperty section below. 
+반응형 UI 프로그래밍에 대한 자세한 내용은 Sample12, Sample13 및 아래의 ReactiveProperty 섹션을 참조하세요. 
 
 ReactiveProperty, ReactiveCollection
 ---
-Game data often requires notification. Should we use properties and events (callbacks)? That's often too complex. UniRx provides ReactiveProperty, a lightweight property broker.
+게임 데이터에는 종종 알림이 필요합니다. 프로퍼티와 이벤트(콜백)를 사용해야 할까요? 너무 복잡할 때가 많습니다. 유니알엑스는 가벼운 프로퍼티 브로커인 리액티브프로퍼티를 제공합니다.
 
 ```csharp
 // Reactive Notification Model
@@ -825,17 +825,17 @@ enemy.IsDead.Where(isDead => isDead == true)
     });
 ```
 
-You can combine ReactiveProperties, ReactiveCollections and observables returned by UnityEvent.AsObservable. All UI elements are observable.
+ReactiveProperties, ReactiveCollections 및 UnityEvent.AsObservable이 반환하는 옵저버블을 결합할 수 있습니다. 모든 UI 요소는 관찰 가능합니다.
 
-Generic ReactiveProperties are not serializable or inspecatble in the Unity editor, but UniRx provides specialized subclasses of ReactiveProperty that are. These include classes such as Int/LongReactiveProperty, Float/DoubleReactiveProperty, StringReactiveProperty, BoolReactiveProperty and more (Browse them here: [InspectableReactiveProperty.cs](https://github.com/neuecc/UniRx/blob/master/Assets/Plugins/UniRx/Scripts/UnityEngineBridge/InspectableReactiveProperty.cs)). All are fully editable in the inspector. For custom Enum ReactiveProperty, it's easy to write a custom inspectable ReactiveProperty[T].
+일반 ReactiveProperties는 Unity 에디터에서 직렬화하거나 인스펙터블할 수 없지만, UniRx는 직렬화할 수 있는 ReactiveProperty의 특수 서브클래스를 제공합니다. 여기에는 Int/LongReactiveProperty, Float/DoubleReactiveProperty, StringReactiveProperty, BoolReactiveProperty 등의 클래스가 포함됩니다(여기에서 찾아보기): [InspectableReactiveProperty.cs](https://github.com/neuecc/UniRx/blob/master/Assets/Plugins/UniRx/Scripts/UnityEngineBridge/InspectableReactiveProperty.cs)). 모두 인스펙터에서 완전히 편집할 수 있습니다. 커스텀 Enum ReactiveProperty의 경우, 커스텀 검사 가능한 ReactiveProperty[T]를 쉽게 작성할 수 있습니다.
 
-If you needs `[Multiline]` or `[Range]` attach to ReactiveProperty, you can use `MultilineReactivePropertyAttribute` and `RangeReactivePropertyAttribute` instead of `Multiline` and `Range`.
+ReactiveProperty에 `[Multiline]` 또는 `[Range]` 어태치먼트가 필요한 경우 `Multiline`과 `Range` 대신 `MultilineReactivePropertyAttribute`와 `RangeReactivePropertyAttribute`를 사용할 수 있습니다.
 
-The provided derived InpsectableReactiveProperties are displayed in the inspector naturally and notify when their value is changed even when it is changed in the inspector.
+제공된 파생된 InpsectableReactiveProperties는 인스펙터에 자연스럽게 표시되며, 인스펙터에서 값이 변경되더라도 변경된 값을 알려줍니다.
 
 ![](StoreDocument/RxPropInspector.png)
 
-This functionality is provided by [InspectorDisplayDrawer](https://github.com/neuecc/UniRx/blob/master/Assets/Plugins/UniRx/Scripts/UnityEngineBridge/InspectorDisplayDrawer.cs). You can supply your own custom specialized ReactiveProperties by inheriting from it:
+이 기능은 [InspectorDisplayDrawer](https://github.com/neuecc/UniRx/blob/master/Assets/Plugins/UniRx/Scripts/UnityEngineBridge/InspectorDisplayDrawer.cs)에서 제공합니다. 이를 상속하여 자신만의 특화된 ReactiveProperties를 제공할 수 있습니다:
 
 ```csharp
 public enum Fruit
@@ -863,7 +863,7 @@ public class ExtendInspectorDisplayDrawer : InspectorDisplayDrawer
 }
 ```
 
-If a ReactiveProperty value is only updated within a stream, you can make it read only by using from `ReadOnlyReactiveProperty`.
+ReactiveProperty 값이 스트림 내에서만 업데이트되는 경우, `ReadOnlyReactiveProperty`를 사용하여 읽기 전용으로 설정할 수 있습니다.
 
 ```csharp
 public class Person
@@ -882,13 +882,13 @@ public class Person
 }
 ```
 
-Model-View-(Reactive)Presenter Pattern
+모델 보기-(반응형) 발표자 패턴
 ---
-UniRx makes it possible to implement the MVP(MVRP) Pattern.
+UniRx를 사용하면 MVP(MVRP) 패턴을 구현할 수 있습니다.
 
 ![](StoreDocument/MVP_Pattern.png)
 
-Why should we use MVP instead of MVVM? Unity doesn't provide a UI binding mechanism and creating a binding layer is too complex and loss and affects performance. Still, Views need updating. Presenters are aware of their view's components and can update them. Although there is no real binding, Observables enables subscription to notification, which can act much like the real thing. This pattern is called a Reactive Presenter: 
+MVVM 대신 MVP를 사용해야 하는 이유는 무엇인가요? Unity는 UI 바인딩 메커니즘을 제공하지 않으며, 바인딩 레이어를 생성하는 것은 너무 복잡하고 손실이 발생하며 성능에 영향을 미칩니다. 그럼에도 불구하고 뷰는 업데이트가 필요합니다. 발표자는 뷰의 컴포넌트를 알고 있으며 이를 업데이트할 수 있습니다. 실제 바인딩은 없지만 Observables를 사용하면 알림을 구독할 수 있으므로 실제와 매우 유사하게 작동할 수 있습니다. 이 패턴을 반응형 발표자라고 합니다: 
 
 ```csharp
 // Presenter for scene(canvas) root.
@@ -933,13 +933,13 @@ public class Enemy
 }
 ```
 
-A View is a scene, that is a Unity hierarchy. Views are associated with Presenters by the Unity Engine on initialize. The XxxAsObservable methods make creating event signals simple, without any overhead. SubscribeToText and SubscribeToInteractable are simple binding-like helpers. These may be simple tools, but they are very powerful. They feel natural in the Unity environment and provide high performance and a clean architecture.
+뷰는 씬, 즉 Unity 계층 구조입니다. 뷰는 초기화 시 Unity 엔진에 의해 프레젠터와 연결됩니다. XxxAsObservable 메서드를 사용하면 오버헤드 없이 이벤트 신호를 간단하게 생성할 수 있습니다. SubscribeToText와 SubscribeToInteractable은 간단한 바인딩과 유사한 헬퍼입니다. 단순한 툴이지만 매우 강력합니다. Unity 환경에서 자연스럽게 느껴지며 고성능과 깔끔한 아키텍처를 제공합니다.
 
 ![](StoreDocument/MVRP_Loop.png)
 
-V -> RP -> M -> RP -> V completely connected in a reactive way. UniRx provides all of the adaptor methods and classes, but other MVVM(or MV*) frameworks can be used instead. UniRx/ReactiveProperty is only simple toolkit. 
+V -> RP -> M -> RP -> V가 리액티브 방식으로 완전히 연결됩니다. UniRx는 모든 어댑터 메서드와 클래스를 제공하지만, 다른 MVVM(또는 MV*) 프레임워크를 대신 사용할 수 있습니다. UniRx/ReactiveProperty는 단순한 툴킷일 뿐입니다. 
 
-GUI programming also benefits from ObservableTriggers. ObservableTriggers convert Unity events to Observables, so the MV(R)P pattern can be composed using them. For example, `ObservableEventTrigger` converts uGUI events to Observable:
+옵저버블트리거는 GUI 프로그래밍에도 유용합니다. 옵저버블트리거는 Unity 이벤트를 옵저버블로 변환하므로 이를 사용하여 MV(R)P 패턴을 구성할 수 있습니다. 예를 들어 `ObservableEventTrigger`는 uGUI 이벤트를 옵저버블로 변환합니다:
 
 ```csharp
 var eventTrigger = this.gameObject.AddComponent<ObservableEventTrigger>();
@@ -952,14 +952,14 @@ eventTrigger.OnBeginDragAsObservable()
 
 (Obsolete)PresenterBase
 ---
-> Note:
-> PresenterBase works enough, but too complex.  
-> You can use simple `Initialize` method and call parent to child, it works for most scenario.  
-> So I don't recommend using `PresenterBase`, sorry.   
+> 참고:
+> PresenterBase는 충분히 작동하지만 너무 복잡합니다.  
+> 간단한 `Initialize` 메서드를 사용하고 부모에서 자식으로 호출하면 대부분의 시나리오에서 작동합니다.  
+> 그래서 저는 `PresenterBase`를 사용하지 않는 것이 좋습니다.   
 
-ReactiveCommand, AsyncReactiveCommand
+리액티브 커맨드, 비동기 리액티브 커맨드
 ----
-ReactiveCommand abstraction of button command with boolean interactable.
+상호작용이 가능한 부울을 사용한 버튼 명령의 ReactiveCommand 추상화.
              
 ```csharp
 public class Player
@@ -997,7 +997,7 @@ public class Presenter : MonoBehaviour
 }		
 ```		
 		
-AsyncReactiveCommand is a variation of ReactiveCommand that `CanExecute`(in many cases bind to button's interactable) is changed to false until asynchronous execution was finished.		
+비동기 실행이 완료될 때까지 `CanExecute`(대부분의 경우 버튼의 인터랙티브에 바인딩)가 거짓으로 변경되는 ReactiveCommand의 변형인 AsyncReactiveCommand입니다.
 		
 ```csharp		
 public class Presenter : MonoBehaviour		
@@ -1026,11 +1026,11 @@ public class Presenter : MonoBehaviour
 }		
 ```
 
-`AsyncReactiveCommand` has three constructor.
+AsyncReactiveCommand`에는 세 개의 생성자가 있습니다.
 
-* `()` - CanExecute is changed to false until async execution finished
-* `(IObservable<bool> canExecuteSource)` - Mixed with empty, CanExecute becomes true when canExecuteSource send to true and does not executing 
-* `(IReactiveProperty<bool> sharedCanExecute)` - share execution status between multiple AsyncReactiveCommands, if one AsyncReactiveCommand is executing, other AsyncReactiveCommands(with same sharedCanExecute property) becomes CanExecute false until async execution finished
+* `()` - 비동기 실행이 완료될 때까지 CanExecute가 false로 변경됩니다.
+* `(IObservable<bool> canExecuteSource)` - empty와 혼합된 경우, canExecuteSource가 참으로 전송하고 실행하지 않으면 CanExecute가 참이 됩니다. 
+* `(IReactiveProperty<bool> sharedCanExecute)` - 여러 AsyncReactiveCommand 간에 실행 상태를 공유하면, 하나의 AsyncReactiveCommand가 실행 중이면 비동기 실행이 완료될 때까지 다른 AsyncReactiveCommand(동일한 sharedCanExecute 속성을 가진)는 CanExecute가 거짓이 됩니다.
 
 ```csharp
 public class Presenter : MonoBehaviour
@@ -1058,9 +1058,9 @@ public class Presenter : MonoBehaviour
 }
 ```
 
-MessageBroker, AsyncMessageBroker
+메시지 브로커, 비동기 메시지 브로커
 ---
-MessageBroker is Rx based in-memory pubsub system filtered by type.
+MessageBroker는 유형별로 필터링된 Rx 기반 인메모리 pubsub 시스템입니다.
 
 ```csharp
 public class TestArgs
@@ -1077,7 +1077,7 @@ MessageBroker.Default.Receive<TestArgs>().Subscribe(x => UnityEngine.Debug.Log(x
 MessageBroker.Default.Publish(new TestArgs { Value = 1000 });
 ```
 
-AsyncMessageBroker is variation of MessageBroker, can await Publish call.
+AsyncMessageBroker는 메시지 브로커의 변형으로, 게시 호출을 기다릴 수 있습니다.
 
 ```csharp
 AsyncMessageBroker.Default.Subscribe<TestArgs>(x =>
@@ -1099,7 +1099,7 @@ AsyncMessageBroker.Default.PublishAsync(new TestArgs { Value = 3000 })
 
 UniRx.Toolkit
 ---
-`UniRx.Toolkit` includes serveral Rx-ish tools. Currently includes `ObjectPool` and `AsyncObjectPool`.  It can `Rent`, `Return` and `PreloadAsync` for fill pool before rent operation.
+`UniRx.Toolkit`에는 서버용 Rx 도구가 포함되어 있습니다. 현재 `ObjectPool`과 `AsyncObjectPool`이 포함되어 있습니다.  `Rent`, `Return`, rent 작업 전 풀을 채우기 위한 `PreloadAsync`가 가능합니다.
 
 ```csharp
 // sample class
@@ -1163,101 +1163,108 @@ public class Presenter : MonoBehaviour
 }
 ```
 
-Visual Studio Analyzer
+비주얼 스튜디오 분석기
 ---
-For Visual Studio 2015 users, a custom analyzer, UniRxAnalyzer, is provided. It can, for example, detect when streams aren't subscribed to.
+Visual Studio 2015 사용자의 경우, 사용자 지정 분석기인 UniRxAnalyzer가 제공됩니다. 예를 들어 스트림이 구독되지 않은 경우를 감지할 수 있습니다.
 
 ![](StoreDocument/AnalyzerReference.jpg)
 
 ![](StoreDocument/VSAnalyzer.jpg)
 
-`ObservableWWW` doesn't fire until it's subscribed to, so the analyzer warns about incorrect usage. It can be downloaded from NuGet.
+옵저버블웹`은 구독될 때까지 실행되지 않으므로 분석기는 잘못된 사용에 대해 경고합니다. NuGet에서 다운로드할 수 있습니다.
 
-* Install-Package [UniRxAnalyzer](http://www.nuget.org/packages/UniRxAnalyzer)
+* 설치-패키지 [UniRxAnalyzer](http://www.nuget.org/packages/UniRxAnalyzer)
 
-Please submit new analyzer ideas on GitHub Issues!
+새로운 분석기 아이디어를 깃허브 이슈에 제출해 주세요!
 
-Samples
+샘플
 ---
-See [UniRx/Examples](https://github.com/neuecc/UniRx/tree/master/Assets/Plugins/UniRx/Examples)  
+UniRx/예제](https://github.com/neuecc/UniRx/tree/master/Assets/Plugins/UniRx/Examples)를 참조하세요.  
 
-The samples demonstrate how to do resource management (Sample09_EventHandling), what is the MainThreadDispatcher, among other things.
+샘플에서는 리소스 관리 방법(Sample09_EventHandling), 메인 스레드 디스패처가 무엇인지 등을 설명합니다.
 
-Windows Store/Phone App (NETFX_CORE)
+윈도우 스토어/폰 앱(NETFX_CORE)
 ---
-Some interfaces, such as  `UniRx.IObservable<T>` and `System.IObservable<T>`, cause conflicts when submitting to the Windows Store App.
-Therefore, when using NETFX_CORE, please refrain from using such constructs as `UniRx.IObservable<T>` and refer to the UniRx components by their short name, without adding the namespace. This solves the conflicts.
+UniRx.IObservable<T>` 및 `System.IObservable<T>`와 같은 일부 인터페이스는 Windows 스토어 앱에 제출할 때 충돌을 일으킵니다.
+따라서 NETFX_CORE를 사용할 때는 `UniRx.IObservable<T>`와 같은 구조체 사용을 자제하고 네임스페이스를 추가하지 않고 UniRx 컴포넌트를 짧은 이름으로 참조하시기 바랍니다. 이렇게 하면 충돌이 해결됩니다.
 
-DLL Separation
+DLL 분리
 ---
-If you want to pre-build UniRx, you can build own dll. clone project and open `UniRx.sln`, you can see `UniRx`, it is fullset separated project of UniRx. You should define compile symbol like  `UNITY;UNITY_5_4_OR_NEWER;UNITY_5_4_0;UNITY_5_4;UNITY_5;` + `UNITY_EDITOR`, `UNITY_IPHONE` or other platform symbol. We can not provides pre-build binary to release page, asset store because compile symbol is different each other.
+UniRx를 미리 빌드하고 싶다면 자체적으로 dll을 빌드할 수 있습니다. 프로젝트를 복제하고 `UniRx.sln`을 열면 `UniRx`가 표시되며, 이는 UniRx의 풀셋 분리된 프로젝트입니다. 컴파일 심볼은 `UNITY;UNITY_5_4_OR_NEWER;UNITY_5_4_0;UNITY_5_4;UNITY_5;` + `UNITY_EDITOR`, `UNITY_IPHONE` 또는 기타 플랫폼 심볼로 정의해야 합니다. 컴파일 심볼이 서로 다르기 때문에 릴리스 페이지, 에셋 스토어에 사전 빌드 바이너리를 제공할 수 없습니다.
 
-UPM Package
+
+UPM 패키지
 ---
-After Unity 2019.3.4f1, Unity 2020.1a21, that support path query parameter of git package. You can add `https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts` to Package Manager
+Unity 2019.3.4f1, Unity 2020.1a21 이후 버전부터 git 패키지의 경로 쿼리 파라미터를 지원합니다. 패키지 관리자에 `https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts`을 추가하거나
 
-or add `"com.neuecc.unirx": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts"` to `Packages/manifest.json`.
 
-Reference
+또는 `"com.neuecc.unirx": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts"`를 `패키지/매니페스트.json`에 추가합니다.
+
+
+참조
 ---
 * [UniRx/wiki](https://github.com/neuecc/UniRx/wiki)
 
-UniRx API documents.
+
+UniRx API 문서.
+
 
 * [ReactiveX](http://reactivex.io/)
 
-The home of ReactiveX. [Introduction](http://reactivex.io/intro.html), [All operators](http://reactivex.io/documentation/operators.html) are illustrated with graphical marble diagrams, there makes easy to understand. And UniRx is official [ReactiveX Languages](http://reactivex.io/languages.html).
 
-* [Introduction to Rx](http://introtorx.com/)
+리액티브X의 홈 페이지. [소개](http://reactivex.io/intro.html), [모든 연산자](http://reactivex.io/documentation/operators.html)는 그래픽 마블 다이어그램으로 설명되어 있어 쉽게 이해할 수 있습니다. 그리고 유니알엑스는 공식 [리액티브엑스 언어](http://reactivex.io/languages.html)입니다.
 
-A great online tutorial and eBook.
 
-* [Beginner's Guide to the Reactive Extensions](http://msdn.microsoft.com/en-us/data/gg577611)
+* [Rx 소개](http://introtorx.com/)
 
-Many videos, slides and documents for Rx.NET.
 
-* [The future of programming technology in Unity - UniRx -(JPN)](http://www.slideshare.net/torisoup/unity-unirx) 
-  - [Korean translation](http://www.slideshare.net/agebreak/160402-unirx)
+훌륭한 온라인 튜토리얼 및 전자책.
 
-Intro slide by [@torisoup](https://github.com/torisoup)
 
-* [Reactive Programming, ​Unity 3D and you](http://slides.com/sammegidov/unirx#/)
-  - [Repository of UniRxSimpleGame](https://github.com/Xerios/UniRxSimpleGame)
+* [리액티브 확장 프로그램 초보자 가이드](http://msdn.microsoft.com/en-us/data/gg577611)
 
-Intro slide and sample game by [@Xerios](https://github.com/Xerios)
 
-* [GDC 2016 Sessions of Adventure Capialist](https://www.youtube.com/watch?v=j3YhG91mPsU&feature=youtu.be&t=9m12s)
+Rx.NET에 대한 많은 비디오, 슬라이드 및 문서.
 
-How to integrate with PlayFab API
 
-Help & Contribute
+* [Unity 프로그래밍 기술의 미래
+
+도움말 및 기여
 ---
-Support thread on the Unity forum. Ask me any question - [http://forum.unity3d.com/threads/248535-UniRx-Reactive-Extensions-for-Unity](http://forum.unity3d.com/threads/248535-UniRx-Reactive-Extensions-for-Unity)  
+유니티 포럼의 지원 스레드 질문하기 - [http://forum.unity3d.com/threads/248535-UniRx-Reactive-Extensions-for-Unity](http://forum.unity3d.com/threads/248535-UniRx-Reactive-Extensions-for-Unity)  
 
-Become a backer, Sponsored, one time donation are welcome, we're using [Open Collective - UniRx](https://opencollective.com/unirx/#)
 
-We welcome any contributions, be they bug reports, requests or pull request.  
-Please consult and submit your reports or requests on GitHub issues.  
-Source code is available in `Assets/Plugins/UniRx/Scripts`.  
+후원자 되기, 후원, 일회성 기부를 환영합니다. [오픈 컬렉티브 - UniRx](https://opencollective.com/unirx/#)
 
-Author's other Unity + LINQ Assets
+
+버그 리포트, 요청, 풀 리퀘스트 등 모든 기여를 환영합니다.  
+GitHub 이슈에 대한 보고서나 요청을 상담하고 제출해 주세요.  
+소스 코드는 `Assets/Plugins/UniRx/Scripts`에서 확인할 수 있습니다.  
+
+
+작성자의 다른 Unity + LINQ 에셋
 ---
-[LINQ to GameObject](https://github.com/neuecc/LINQ-to-GameObject-for-Unity/) is a group of GameObject extensions for Unity that allows traversing the hierarchy and appending GameObject to it like LINQ to XML. It's free and opensource on GitHub.
+[LINQ to GameObject](https://github.com/neuecc/LINQ-to-GameObject-for-Unity/)는 계층구조를 가로지르며 LINQ to XML처럼 게임 오브젝트를 추가할 수 있는 Unity용 게임 오브젝트 확장 그룹입니다. GitHub에서 무료로 오픈소스로 제공됩니다.
+
 
 ![](https://raw.githubusercontent.com/neuecc/LINQ-to-GameObject-for-Unity/master/Images/axis.jpg)
 
-Author Info
+
+작성자 정보
 ---
-Yoshifumi Kawai(a.k.a. neuecc) is a software developer in Japan.  
-Currently founded consulting company [New World, Inc.](http://new-world.co/)  
-He is awarding Microsoft MVP for Visual C# since 2011.  
+요시후미 카와이(일명 neuecc)는 일본의 소프트웨어 개발자입니다.  
+현재 컨설팅 회사 [뉴월드 주식회사](http://new-world.co/)를 설립했습니다.  
+2011년부터 Visual C# 부문 Microsoft MVP를 수상했습니다.  
 
-Blog: https://medium.com/@neuecc (English)  
-Blog: http://neue.cc/ (Japanese)   
-Twitter: https://twitter.com/neuecc (Japanese)
 
-License
+블로그: https://medium.com/@neuecc (영어)  
+블로그: http://neue.cc/ (일본어)   
+Twitter: https://twitter.com/neuecc (일본어)
+
+
+라이선스
 ---
-This library is under the MIT License.
+이 라이브러리는 MIT 라이선스 하에 있습니다.
 
-Some code is borrowed from [Rx.NET](https://github.com/dotnet/reactive/) and [mono/mcs](https://github.com/mono/mono).
+
+일부 코드는 [Rx.NET](https://github.com/dotnet/reactive/) 및 [mono/mcs](https://github.com/mono/mono)에서 차용했습니다.
